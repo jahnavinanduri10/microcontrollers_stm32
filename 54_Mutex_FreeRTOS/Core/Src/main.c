@@ -28,8 +28,8 @@ void printmsg(char *msg)
 	}
 }
 
-// binary semaphore handle
-xSemaphoreHandle xBinSemaphore;
+// mutex handle
+SemaphoreHandle_t xBinSemaphore;
 
 int main(void)
 {
@@ -42,15 +42,13 @@ int main(void)
   sprintf(user_msg,"Demo of mutual exclusion using binary semaphore \r\n");
   printmsg(user_msg);
 
-  vSemaphoreCreateBinary(xBinSemaphore);
+  xBinSemaphore = xSemaphoreCreateMutex();
 
   if(xBinSemaphore != NULL)
   {
 	  xTaskCreate(vTask1, "Task1", 500, NULL, 1, NULL);
 
 	  xTaskCreate(vTask2, "Task2", 500, NULL, 1, NULL);
-
-	  xSemaphoreGive(xBinSemaphore);
 
 	  vTaskStartScheduler();
   }
